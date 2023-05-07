@@ -41,7 +41,7 @@ securityContext: {}
 
 service:
   portName: todolist
-  type: NodePort
+  type: LoadBalancer
   port: 3000
 
 dbservice:
