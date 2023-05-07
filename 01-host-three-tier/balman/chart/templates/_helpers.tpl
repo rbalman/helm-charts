@@ -48,11 +48,7 @@ Selector labels
 {{- define "chart.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "chart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{/*
-older ones
-app: todolist-app
-role: backend
-*/}}
+app.kubernetes.io/role: "app"
 {{- end }}
 
 {{/*
