@@ -50,14 +50,14 @@ dbservice:
 
 ingress:
   enabled: true
-  className: "nginx"
+  # className: "nginx"
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     # kubernetes.io/ingress.class: alb #if need to spin ALB from aws loadbalancer controller
     alb.ingress.kubernetes.io/target-type: instance #to use instance type as target for ALB, to make use of this target-type you k8s service either needs to specify type as NodePort or LoadBalancer
     # alb.ingress.kubernetes.io/group.name: cka # if you want to share ALB with ingress
     alb.ingress.kubernetes.io/jpt.name: my-custom-thing
-    # kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.class: alb
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: ""
