@@ -1,0 +1,84 @@
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ include "chart.fullname" . }}  # Sets PV's name
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: manual
+  capacity:
+    storage: 1Gi # Sets PV Volume
+  accessModes:
+    - ReadWriteMany
+  {{- if .Values.nfs }}
+  nfs:
+    path: {{ .Values.nfs.path }}
+    server: {{ .Values.nfs.server }}
+  {{- else if .Values.hostPath }}
+  hostPath:
+    path: {{ .Values.hostPath.path }}
+  {{- end }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "chart.fullname" . }}  # Sets name of PVC
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany  # Sets read and write access
+  resources:
+    requests:
+      storage: 1Gi  # Sets volume size
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}datastore
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "chart.dbSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "chart.dbSelectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: balman/todolist-pg:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.dbservice.port }}
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgredb
+        envFrom:
+          - configMapRef:
+              name: {{ include "chart.fullname" . }}
+      restartPolicy: Always
+      volumes:
+      - name: postgredb
+        persistentVolumeClaim:
+          claimName: {{ include "chart.fullname" . }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "chart.fullname" . }}datastore
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  type:  {{ .Values.dbservice.type }}
+  ports:
+    - port: {{ .Values.dbservice.port }}
+  selector:
+   {{ include "chart.dbSelectorLabels" . | nindent 4 }}

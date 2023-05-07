@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.pg
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin1234
+      POSTGRES_USER: balman
+      POSTGRES_DB: todos
+    volumes:
+      - ./.db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports: 
+      - 5432:5432
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: admin1234
+  #     POSTGRES_USER: balman
+  #     POSTGRES_DB: todos
+  #     POSTGRES_HOST: postgres
+  #   ports:
+  #     - 3000:3000

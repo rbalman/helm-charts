@@ -1,0 +1,86 @@
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgres-pv-volume  # Sets PV's name
+  labels:
+    type: local  # Sets PV's type to local
+    app: postgres
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: manual
+  capacity:
+    storage: 3Gi # Sets PV Volume
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-pv-claim  # Sets name of PVC
+  labels:
+    app: postgres
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany  # Sets read and write access
+  resources:
+    requests:
+      storage: 3Gi  # Sets volume size
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todolist-datastore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todolist-datastore
+      role: datastore
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: todolist-datastore
+        role: datastore
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: postgres-config
+        image: balman/todolist-pg:v1
+        imagePullPolicy: IfNotPresent
+        name: todolist-datastore
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgredb
+      restartPolicy: Always
+      volumes:
+      - name: postgredb
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todolist-datastore
+  labels:
+    app: todolist-datastore
+spec:
+  # type: NodePort # Sets service type
+  ports:
+    - port: 5432
+  selector:
+    app: todolist-datastore
+          

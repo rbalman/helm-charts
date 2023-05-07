@@ -1,0 +1,21 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dev-role
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["pods", "deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dev-role-binding
+subjects:
+- kind: User
+  name: k8s-developer
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: dev-role
+  apiGroup: ""

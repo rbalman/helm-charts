@@ -1,0 +1,18 @@
+#Reference: https://betterprogramming.pub/kubernetes-authentication-in-aws-eks-using-iam-authenticator-de3a586e885c
+apiVersion: v1
+data:
+  mapRoles: |
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam::046731495937:role/node-group-1-eks-node-group-20221201005341412100000008
+      username: system:node:{{EC2PrivateDNSName}}
+  mapUsers: |
+    - groups:
+      - development
+      userarn: arn:aws:iam::046731495937:user/developer
+      username: k8s-developer
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
