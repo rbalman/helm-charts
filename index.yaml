@@ -3,6 +3,16 @@ entries:
   default-chart:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-05-08T04:14:07.002770117Z"
+    description: A Helm chart for Kubernetes v0.2.0
+    digest: 89c9f6aff8159991e61f09edaf4931080a921c84f582c0ca371a351608e22cca
+    name: default-chart
+    type: application
+    urls:
+    - https://github.com/rbalman/helm-charts/releases/download/default-chart-0.2.0/default-chart-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-05-08T04:10:43.789561983Z"
     description: A Helm chart for Kubernetes
     digest: d172177076b88d820fa8719d14afa5a5862383035f69dbdc98280c208274f9b7
@@ -14,6 +24,16 @@ entries:
   tracker:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2023-05-08T04:14:07.133815165Z"
+    description: A Helm chart for three tier golang todolist app v0.2.0
+    digest: f1343542706f3667464e626d1e4a41f7b30c53b78f5eab3b56d9124f822b4a00
+    name: tracker
+    type: application
+    urls:
+    - https://github.com/rbalman/helm-charts/releases/download/tracker-0.2.0/tracker-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2023-05-08T03:59:51.167346124Z"
     description: A Helm chart for three tier golang todolist app
     digest: 7cb5a2f530666050c8c46c2d718b7a37c9b04c52891afb7acac6b6473c08b371
@@ -22,4 +42,4 @@ entries:
     urls:
     - https://github.com/rbalman/helm-charts/releases/download/tracker-0.1.0/tracker-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-08T04:10:43.789566083Z"
+generated: "2023-05-08T04:14:07.133823965Z"
