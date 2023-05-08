@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  default-chart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-05-08T04:10:43.789561983Z"
+    description: A Helm chart for Kubernetes
+    digest: d172177076b88d820fa8719d14afa5a5862383035f69dbdc98280c208274f9b7
+    name: default-chart
+    type: application
+    urls:
+    - https://github.com/rbalman/helm-charts/releases/download/default-chart-0.1.0/default-chart-0.1.0.tgz
+    version: 0.1.0
   tracker:
   - apiVersion: v2
     appVersion: 0.0.1
@@ -11,4 +22,4 @@ entries:
     urls:
     - https://github.com/rbalman/helm-charts/releases/download/tracker-0.1.0/tracker-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-08T03:59:51.167358524Z"
+generated: "2023-05-08T04:10:43.789566083Z"
