@@ -1,0 +1,102 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: balman/todolist
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v2"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+hostPath:
+  path: "/mnt/data"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  portName: todolist
+  type: LoadBalancer
+  port: 3000
+
+dbservice:
+  type: ClusterIP
+  port: 5432
+
+ingress:
+  enabled: true
+  # className: "nginx"
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    # kubernetes.io/ingress.class: alb #if need to spin ALB from aws loadbalancer controller
+    alb.ingress.kubernetes.io/target-type: instance #to use instance type as target for ALB, to make use of this target-type you k8s service either needs to specify type as NodePort or LoadBalancer
+    # alb.ingress.kubernetes.io/group.name: cka # if you want to share ALB with ingress
+    alb.ingress.kubernetes.io/jpt.name: my-custom-thing
+    kubernetes.io/ingress.class: alb
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: ""
+      paths:
+        - path: /todo
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 20
+  targetMemoryUtilizationPercentage: 20
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+config:
+  data:
+    POSTGRES_DB: todos
+    POSTGRES_USER: balman
+    POSTGRES_PASSWORD: admin1234
+    POSTGRES_HOST: trackerdatastore
